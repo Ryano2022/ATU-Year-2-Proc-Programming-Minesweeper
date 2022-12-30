@@ -108,6 +108,7 @@ void main() {
 		fscanf(savedGame, "%d\n", &turnNumber); // Loading turnNumber.
 
 		fclose(savedGame);
+		displayGrid(0);
 	}
 	else {
 		// Generate 10 random locations for the mines.
@@ -227,8 +228,8 @@ void main() {
 			else {
 				printf("P2: "); // Player two.
 			}
-			displayGrid(0);
 		}
+
 		printf("Which row and column would you like to select? "); // Take in user input for which tile to reveal.
 		scanf("%d %d", &userX, &userY);
 
