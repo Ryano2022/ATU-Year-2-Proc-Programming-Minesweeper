@@ -64,6 +64,16 @@ void displayGrid(int version) {
 	}
 }
 
+void points() {
+	if (versus == 1) {
+		if (turnNumber % 2 == 0) {
+			playerTwoTiles++;
+		}
+		else {
+			playerOneTiles++;
+		}
+	}
+}
 void main() {
 	srand(time(NULL)); // Making sure the random numbers are indeed random.
 
@@ -106,6 +116,7 @@ void main() {
 		fscanf(savedGame, "%d\n", &playerOneTiles); // Loading playerOneTiles.
 		fscanf(savedGame, "%d\n", &playerTwoTiles); // Loading playerTwoTiles.
 		fscanf(savedGame, "%d\n", &turnNumber); // Loading turnNumber.
+		fscanf(savedGame, "%d\n", &versus); // Loading versus.
 
 		fclose(savedGame);
 		displayGrid(0);
@@ -205,7 +216,7 @@ void main() {
 		if (versus == 1) {
 			playerOneTiles = 0;
 			playerTwoTiles = 0;
-			turnNumber = 0;
+			turnNumber = 1;
 		}
 		tilesRevealed = 0;
 
@@ -223,10 +234,10 @@ void main() {
 	while (mineExploded == false || tilesRevealed != (NUM_OF_TILES - NUM_OF_MINES)) { // Repeat until the mine explodes or all tiles have been revealed.
 		if (versus == 1) {
 			if (turnNumber % 2 == 0) {
-				printf("P1: "); // Player one.
+				printf("P2: "); // Player two.
 			}
 			else {
-				printf("P2: "); // Player two.
+				printf("P1: "); // Player one.
 			}
 		}
 
@@ -251,15 +262,19 @@ void main() {
 						int num = 1; // I've spent 4 nearly 5 hours trying to figure out how to reveal all the 0s around a selected 0.
 						if (game[userX + num][userY] == 0) { // I've tried all sorts of different ideas but I just cannot think of how
 							visable[userX + num][userY] = 1; // To make it work so I'm going to have to skip this part.
+							//points();    // Points not working as intended so commented out.
 						}
 						if (game[userX - num][userY] == 0) {
 							visable[userX - num][userY] = 1;
+							//points();
 						}
 						if (game[userX][userY + num] == 0) {
 							visable[userX][userY + num] = 1;
+							//points();
 						}
 						if (game[userX][userY - num] == 0) {
 							visable[userX][userY - num] == 0;
+							//points();
 						}
 					}
 
@@ -281,6 +296,9 @@ void main() {
 		printf("\n");
 		displayGrid(0);
 		printf("\n");
+		if (versus == 1) {
+			printf("P1 Points: %d\nP2 Points: %d\n", playerOneTiles, playerTwoTiles);
+		}
 
 		if (game[userX][userY] == MINE) // Triggering the loss.
 			mineExploded = true;
@@ -288,26 +306,28 @@ void main() {
 		if (mineExploded == true) { // Loss
 			if (versus == 1) {
 				if (turnNumber % 2 == 0) {
-					printf("P2: "); // Player two.
+					printf("P1: "); // Player one
 				}
 				else {
-					printf("P1: "); // Player one.
+					printf("P2: "); // Player two.
 				}
 			}
 			printf("You selected a mine! You lose. Better luck next time!\n\n");
 			exit(0);
 		}
 
-		if (tilesRevealed == (NUM_OF_TILES - NUM_OF_MINES)) { // Victory
+		if (tilesRevealed == (NUM_OF_TILES - NUM_OF_MINES)) { // Victory 
 			if (versus == 1) {
-				if (playerOneTiles > playerTwoTiles) {
-					printf("P1: ");
+				if (playerOneTiles > playerTwoTiles) { // Backwards but it works.
+					printf("P1: You had the most tiles revealed without setting off a mine! You win! Good job!");
 				}
 				else {
-					printf("P2: ");
+					printf("P2: You had the most tiles revealed without setting off a mine! You win! Good job!");
 				}
 			}
-			printf("You revealed all the tiles without setting off a mine! You win! Good job!\n\n");
+			else {
+				printf("You revealed all the tiles without setting off a mine! You win! Good job!\n\n");
+			}
 			exit(0);
 		}
 
@@ -341,6 +361,7 @@ void main() {
 			fprintf(savedGame, "%d\n", playerOneTiles); // Saving playerOneTiles.
 			fprintf(savedGame, "%d\n", playerTwoTiles); // Saving playerTwoTiles.
 			fprintf(savedGame, "%d\n", turnNumber); // Saving turnNumber.
+			fprintf(savedGame, "%d\n", versus); // Saving versus.
 
 			fclose(savedGame);
 		}
